@@ -1,0 +1,245 @@
+{% extends 'barraLateral_jurado.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/evaluacion_jurado_proyecto.css' %}">
+<script src="{% static 'js/evaluacion_jurado_proyecto.js' %}" defer></script>
+<script>
+    const csrfToken = "{{ csrf_token }}"; 
+    const juradoId = "{{ jurado.id }}";
+    const asignacionId = "{{ asignacion.id }}";
+    const guardarEvaluacion = "{% url 'guardar_evaluacion' %}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Columna derecha: Título y ficha de datos -->
+    <h1>EVALUACIÓN DE PROYECTOS DE INVESTIGACIÓN</h1>
+    <hr class="separator">
+    <div class="flex-container">
+        <div class="left-column">
+            <div class="section">
+                <div class="info-item flex-container">
+                    <div class="flex-item">
+                        <h3>ASPECTOS GENERALES</h3>
+                    </div>
+                </div>
+                <div class="info-item flex-container">
+                    <div class="flex-item">
+                        <form id="evaluacion-form">
+                            <table class="table-resultados">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Puntaje</th>
+                                        <th>Criterio</th>
+                                        <th>Calificación</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Introducción -->
+                                    <tr>
+                                        <td style="font-weight: 700;">Introducción</td>
+                                        <td>3</td>
+                                        <td>
+                                            *Se menciona el problema de investigación de forma coherente y con un enfoque de lo general a lo particular (tener en cuenta que el objeto de estudio de la escuela de informática es el binomio software / sistema). Se coloca la justificación teórica, metodológica, práctica y social Se detalla los objetivos de la investigación (general y específicos).
+                                        </td>
+                                        <td>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_introduccion" value="0"> 0</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_introduccion" value="1"> 1</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_introduccion" value="2"> 2</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_introduccion" value="3"> 3</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                           <label class="obs">Observación:</label>
+                                            <textarea name="observacion_introduccion" placeholder="Escriba aquí..."></textarea>
+                                        </td>
+                                    </tr>
+                                    <!-- Antecedentes -->
+                                    <tr>
+                                        <td style="font-weight: 700;">Antecedentes</td>
+                                        <td>3</td>
+                                        <td>*La estructura de la redacción del antecedente comprende: Cita, Objetivo, Resultados, Conclusión y Aporte.</td>
+                                        <td>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_antecedentes" value="0"> 0</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_antecedentes" value="1"> 1</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_antecedentes" value="2"> 2</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_antecedentes" value="3"> 3</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                           <label class="obs">Observación:</label>
+                                            <textarea name="observacion_antecedentes" placeholder="Escriba aquí..."></textarea>
+                                        </td>
+                                    </tr>
+                                    <!-- Marco teórico -->
+                                    <tr>
+                                        <td style="font-weight: 700;">Marco teórico</td>
+                                        <td>3</td>
+                                        <td>*Se menciona la información (extraída de base de datos reconocidas y/o libros) de las variables de estudio y de la metodología de desarrollo de software (si es el caso).</td>
+                                        <td>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_marco_teorico" value="0"> 0</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_marco_teorico" value="1"> 1</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_marco_teorico" value="2"> 2</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_marco_teorico" value="3"> 3</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                           <label class="obs">Observación:</label>
+                                            <textarea name="observacion_marco_teorico" placeholder="Escriba aquí..."></textarea>
+                                        </td>
+                                    </tr>
+                                    <!-- Hipótesis -->
+                                    <tr>
+                                        <td style="font-weight: 700;">Hipótesis</td>
+                                        <td>1</td>
+                                        <td>*Se detallan la hipótesis general y específicas de la investigación.</td>
+                                        <td>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_hipotesis" value="0"> 0</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_hipotesis" value="1"> 1</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                           <label class="obs">Observación:</label>
+                                            <textarea name="observacion_hipotesis" placeholder="Escriba aquí..."></textarea>
+                                        </td>
+                                    </tr>
+                                    <!-- Metodología -->
+                                    <tr>
+                                        <td style="font-weight: 700;">Metodología</td>
+                                        <td>3</td>
+                                        <td>*Se especifica el enfoque de investigación, el tipo de investigación, el diseño de investigación, la población y/o muestra, técnicas e instrumentos que utilizó. Sobre la validez y confiabilidad eso solo aplica para las encuestas elaboradas por el investigador.</td>
+                                        <td>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_metodologia" value="0"> 0</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_metodologia" value="1"> 1</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_metodologia" value="2"> 2</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_metodologia" value="3"> 3</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                           <label class="obs">Observación:</label>
+                                            <textarea name="observacion_metodologia" placeholder="Escriba aquí..."></textarea>
+                                        </td>
+                                    </tr>
+                                    <!-- Aspectos administrativos-->
+                                    <tr>
+                                        <td style="font-weight: 700;">Aspectos administrativos</td>
+                                        <td>3</td>
+                                        <td>*Se detalla los recursos humanos (estudiantes y asesores), servicios de terceros, equipos y bienes duraderos, pasajes y viáticos, materiales e insumos. Se coloca el financiamiento de la investigación y el cronograma del proyecto.</td>
+                                        <td>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_aspectos_administrativos" value="0"> 0</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_aspectos_administrativos" value="1"> 1</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_aspectos_administrativos" value="2"> 2</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_aspectos_administrativos" value="3"> 3</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                           <label class="obs">Observación:</label>
+                                            <textarea name="observacion_aspectos_administrativos" placeholder="Escriba aquí..."></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                <div class="info-item flex-container">
+                    <div class="flex-item">
+                        <h3>ASPECTOS DE FORMA</h3>
+                    </div>
+                </div>
+                <div class="info-item flex-container">
+                    <div class="flex-item">
+                        <form id="evaluacion-form2">
+                            <table class="table-resultados">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Puntaje</th>
+                                        <th>Criterio</th>
+                                        <th>Calificación</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Redacción -->
+                                    <tr>
+                                        <td style="font-weight: 700;">Redacción</td>
+                                        <td>2</td>
+                                        <td>
+                                            *La redacción se encuentra en tercera persona y en futuro (si corresponde).
+                                        </td>
+                                        <td>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_redaccion" value="0"> 0</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_redaccion" value="1"> 1</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_redaccion" value="2"> 2</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                           <label class="obs">Observación:</label>
+                                            <textarea name="observacion_redaccion" placeholder="Escriba aquí..."></textarea>
+                                        </td>
+                                    </tr>
+                                    <!-- Uso de citas y referencias -->
+                                    <tr>
+                                        <td style="font-weight: 700;">Uso de citas y referencias</td>
+                                        <td>2</td>
+                                        <td>*Complementa su redacción con citas en estilo IEE y las referencias han sido generadas correctamente. La cantidad de citas utilizadas en el documento deben ser 25.</td>
+                                        <td>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_citayreferencia" value="0"> 0</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_citayreferencia" value="1"> 1</label>
+                                            <label class="btn-calificacion"><input type="radio" name="calificacion_citayreferencia" value="2"> 2</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <label class="obs">Observación:</label>
+                                            <textarea name="observacion_citayreferencia" placeholder="Escriba aquí..."></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="right-column">
+            <iframe src="https://drive.google.com/uc?id=1VW3yOXtCfG1HirbTtCcwL5KCssLZEEEi&export=view"></iframe>
+        </div> -->
+    </div>
+    <div class="button-container">
+        <a href="{% url 'evaluacion_jurado' %}" class="register-btn"><i class="fas fa-arrow-left"></i> Regresar</a>
+                <button class="btn-terminar"><i class="fas fa-check"></i> Terminar</button>
+    </div>
+    
+    <div id="guardar-modal" class="modal">
+        <div class="modal-content" >
+            <span class="close" id="close-guardar-modal">&times;
+            </span>
+            <h3>Confirmar guardado</h3>
+            <p>¿Estás seguro de que deseas guardar la evaluación?</p>
+            <div class="modal-buttons">
+                <button id="confirmar-guardar" class="btn confirm" data-redirect-url="{% url 'evaluacion_jurado' %}"><i class="fas fa-check"></i> Confirmar</button>
+                <button id="cancelar-guardar" class="btn cancel"><i class="fas fa-times"></i> Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Mensaje -->
+    <div id="message-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="message-title">Mensaje</h3>
+            <p id="message-body"></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

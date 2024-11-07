@@ -1,0 +1,177 @@
+{% extends 'barraLateral_admin.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/asignacionJurado_admin.css' %}">
+<script src="{% static 'js/asignacionJurado_admin.js' %}" defer></script>
+<script>
+    const csrfToken = "{{ csrf_token }}"; 
+    const administrativoId = "{{ administrativo.id }}";
+    const actualizarJurado = "{% url 'actualizar_jurados' %}";
+    const eliminarJurado = "{% url 'eliminar_jurados' %}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="right-column">
+        <h1>JURADOS - PROYECTO DE TESIS</h1>
+        <hr class="separator">
+        <div class="tab-container">
+            <div class="tab active" id="mostrar-datos-personales">
+                <span class="icono-datos"><i class="fas fa-user-tie"></i></span> Asiganción de Jurados
+            </div>
+        </div>
+
+        <div id="datos-alumno" class="section">
+            <div class="info-item flex-container">
+                <div class="flex-item search-container">
+                    <select name="tramite" id="semestre-select" class="icono-select-semestre">
+                        <option disabled selected>Seleccione el semestre</option>
+                        {% for semestre in semestres %}
+                        <option value="{{ semestre.id }}">{{ semestre.semestreAcademico }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <table class="table-resultados">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Título</th>
+                                <th>Semestre</th>
+                                <th>Fecha</th>
+                                <th>Presidente</th>
+                                <th>Vocal</th>
+                                <th>Secretario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultados-busqueda">
+                            {% if proyectos %}
+                                {% for proyecto in proyectos %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ proyecto.titulo }}</td>
+                                        <td>{{ proyecto.semestre }}</td>
+                                        <td>{{ proyecto.fecha }}</td>
+                                        <td>{{ proyecto.jurados.presidente.nombre_completo }}</td>
+                                        <td>{{ proyecto.jurados.vocal.nombre_completo }}</td>
+                                        <td>{{ proyecto.jurados.secretario.nombre_completo }}</td>
+                                        <td>
+                                            <div class="flex-item" style="justify-content: center;">
+                                                <button class="agregar-jurado" data-proyecto-id="{{ proyecto.id }}" style="margin-right: 10px;">
+                                                    <i class="fas fa-plus-circle"></i> Agregar
+                                                </button>
+                                                <button class="eliminar-jurado" data-proyecto-id="{{ proyecto.id }}">
+                                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="8" class="no-resultados">No tiene proyectos registrados.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Agregar Jurado -->
+        <div id="agregar-jurado-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-agregar-jurado-modal">&times;</span>
+                <h3>Agregar Jurado</h3>
+                <hr class="separator">
+                <div class="flex-item" >
+                    <label for="presidente-select">Presidente:</label>
+                </div>
+                <div class="flex-item" >
+                    <select id="presidente-select">
+                        <option value="" disabled selected>Seleccione Presidente</option>
+                        {% for jurado in jurados %}
+                            {% if jurado.rol.ocupacion == 'PRESIDENTE' %}
+                                <option value="{{ jurado.id }}">{{ jurado.nombres }} {{ jurado.apellidoPat }} {{ jurado.apellidoMat }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex-item" style="margin-top: 10px;">
+                    <label for="vocal-select">Vocal:</label>
+                </div>
+                <div class="flex-item" >
+                    <select id="vocal-select">
+                        <option value="" disabled selected>Seleccione Vocal</option>
+                        {% for jurado in jurados %}
+                            {% if jurado.rol.ocupacion == 'VOCAL' %}
+                                <option value="{{ jurado.id }}">{{ jurado.nombres }} {{ jurado.apellidoPat }} {{ jurado.apellidoMat }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex-item" style="margin-top: 10px;">
+                    <label for="secretario-select">Secretario:</label>
+                    
+                </div>
+                <div class="flex-item" >
+                    <select id="secretario-select">
+                        <option value="" disabled selected>Seleccione Secretario</option>
+                        {% for jurado in jurados %}
+                            {% if jurado.rol.ocupacion == 'SECRETARIO' %}
+                                <option value="{{ jurado.id }}">{{ jurado.nombres }} {{ jurado.apellidoPat }} {{ jurado.apellidoMat }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button id="confirm-agregar-jurado" class="btn confirm"><i class="fas fa-check"></i> Aceptar</button>
+                    <button id="cancel-agregar-jurado" class="btn cancel"><i class="fas fa-times"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal de Confirmación -->
+        <div id="confirm-modal" class="modal">
+            <div class="modal-content">
+                <h3>Confirmación</h3>
+                <p>¿Está seguro de que desea guardar los jurados?</p>
+                <div class="modal-buttons">
+                    <button id="confirm-send" class="btn confirm"><i class="fas fa-check"></i> Aceptar</button>
+                    <button id="cancel-send" class="btn cancel"><i class="fas fa-times"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmación de Eliminación -->
+        <div id="eliminar-jurado-modal" class="modal">
+            <div class="modal-content">
+                <h3>Confirmación de Eliminación</h3>
+                <p>¿Está seguro de que desea eliminar los jurados y la fecha de este proyecto?</p>
+                <div class="modal-buttons">
+                    <button id="confirm-eliminar-jurado" class="btn confirm"><i class="fas fa-check"></i> Aceptar</button>
+                    <button id="cancel-eliminar-jurado" class="btn cancel"><i class="fas fa-times"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal de Mensaje -->
+        <div id="message-modal" class="modal">
+            <div class="modal-content">
+                <h3 id="message-title">Mensaje</h3>
+                <p id="message-body"></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

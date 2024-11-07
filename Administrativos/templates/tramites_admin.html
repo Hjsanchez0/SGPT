@@ -1,0 +1,167 @@
+{% extends 'barraLateral_admin.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tramites_admin.css' %}">
+<script src="{% static 'js/tramites_admin.js' %}" defer></script>
+<script>
+    const csrfToken = "{{ csrf_token }}"; 
+    const administrativoId = "{{ administrativo.id }}";
+    const observarCarta = "{% url 'actualizar_observacion' %}";
+    const enviarRespuestaCarta= "{% url 'enviar_respuesta' %}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="right-column">
+        <h1>TRÁMITES - PROYECTO DE TESIS</h1>
+        <hr class="separator">
+        <div class="tab-container">
+            <div class="tab active" id="mostrar-datos-personales">
+                <span class="icono-datos"><i class="fas fa-clipboard-list"></i></span> Solicitudes
+            </div>
+        </div>
+
+        <div id="datos-alumno" class="section">
+            <div class="info-item flex-container">
+                <div class="flex-item search-container">
+                    <select name="tramite" id="semestre-select" class="icono-select-semestre">
+                        <option disabled selected>Seleccione el semestre</option>
+                        {% for semestre in semestres %}
+                        <option value="{{ semestre.id }}">{{ semestre.semestreAcademico }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item search-container">
+                    <input type="text" id="buscar-dni" class="input-buscar" placeholder="Buscar por DNI">
+                    <button id="buscar-btn" class="buscar-btn">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <table class="table-resultados">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>DNI</th>
+                                <th>Estudiante</th>
+                                <th>Recibido</th>
+                                <th>Estado</th>
+                                <th>Semestre</th>
+                                <th>FUT</th>
+                                <th>Observación</th>
+                                <th>Enviado</th>
+                                <th>Respuesta</th>
+                                <th>
+                                    <div class="flex-item">
+                                        Acciones <input type="checkbox" id="select-all">
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultados-busqueda">
+                            {% if carta_dni_dict %}
+                                {% for carta, dnis in carta_dni_dict %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>
+                                            {% for dni, nombres, apellidoPat, apellidoMat, semestre_id, semestreAcademico in dnis %}
+                                                {{ dni }}{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% for dni, nombres, apellidoPat, apellidoMat, semestre_id, semestreAcademico in dnis %}
+                                                {{ apellidoPat }} {{ apellidoMat }} {{ nombres }} {% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>{{ carta.fechaFut }}</td>
+                                        <td>{{ carta.estadoFut }}</td>
+                                        <td>
+                                            {% for dni, nombres, apellidoPat, apellidoMat, semestre_id, semestreAcademico in dnis %}
+                                                {{ semestreAcademico }} {% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <button class="ver-pdf" type="button" data-url="/media/{{ carta.pdfFut }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>                 
+                                        </td>
+                                        <td>{{ carta.observacionFut }}</td>
+                                        <td>{{ carta.fechaCarta }}</td>
+                                        <td>
+                                            {% if carta.pdfCarta and carta.pdfCarta != "Pendiente" %}
+                                                <button class="ver-pdfCarta" type="button" data-url="/media/{{ carta.pdfCarta }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            {% else %}
+                                                {{ carta.pdfCarta }}
+                                            {% endif %}
+                                        </td>                                                                               
+                                        <td>
+                                            <div class="flex-item">
+                                                <input type="checkbox" class="row-checkbox" data-carta-id="{{ carta.id }}" style="margin-right: 5px; width: 14px; height: 14px;">
+                                                <button class="observar-btn" data-carta-id="{{ carta.id }}">Observar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="11" class="no-resultados">No tiene trámites registrados.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table> 
+                </div>
+            </div>
+            <button class="register-btn" id="enviar-respuesta-btn"><i class="fas fa-paper-plane"></i> Enviar respuesta</button>
+        </div>
+
+        <!-- Modal de Observación -->
+        <div id="observation-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-observation-modal">&times;</span>
+                <div class="flex-item" style="margin-bottom: 10px;">
+                    <h3>Agregar Observación</h3>
+                </div>
+                <div class="flex-item" style="margin-bottom: 5px;">
+                    <label for="observation-textarea">Observación:</label>
+                </div>
+                <div class="flex-item">
+                    <textarea id="observation-textarea" rows="4"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button id="confirm-observation" class="btn confirm"><i class="fas fa-check"></i> Aceptar</button>
+                    <button id="cancel-observation" class="btn cancel"><i class="fas fa-times"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmación -->
+        <div id="confirm-modal" class="modal">
+            <div class="modal-content">
+                <h3>Confirmación</h3>
+                <p>¿Está seguro de que desea enviar la respuesta?</p>
+                <div class="modal-buttons">
+                    <button id="confirm-send" class="btn confirm"><i class="fas fa-check"></i> Aceptar</button>
+                    <button id="cancel-send" class="btn cancel"><i class="fas fa-times"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Mensaje -->
+        <div id="message-modal" class="modal">
+            <div class="modal-content">
+                <h3 id="message-title">Mensaje</h3>
+                <p id="message-body"></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

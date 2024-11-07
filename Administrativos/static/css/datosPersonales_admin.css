@@ -1,0 +1,255 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-top: 70px;
+}
+
+.left-column {
+    margin: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    height: fit-content;
+    width: 20%;
+}
+
+.right-column {
+    flex: 1;
+    margin: 10px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.right-column h1{
+    text-align: start;
+}
+
+.info-item {
+    margin-bottom: 15px;
+}
+
+.info-item label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.info-item i{
+    margin-right: 10px;
+}
+
+.info-item span, .info-item input{
+    display: block;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.flex-item select{
+    display: block;
+    padding: 8px;
+    width: 70%;
+    border: 1px solid #ddd;
+    background: transparent;
+    border-radius: 5px;
+}
+
+input[readonly] {
+    background-color: #f3f3f3;
+}
+
+.separator {
+    border: 0;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+}
+
+.update-btn, .save-btn, .cancel-btn {
+    display: block;
+    margin-top: 20px;
+}
+
+.section {
+    display: block;
+}
+
+.icono-configuracion {
+    margin-right: 5px; 
+}
+
+.icono-datos {
+    margin-right: 5px; 
+}
+
+.tab-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px 5px 0 0; 
+    cursor: pointer;
+    background-color: #f9f9f9; 
+    margin-right: 5px; 
+    text-align: center;
+    font-weight: bold;
+}
+
+.tab:hover {
+    background-color: #e9e9e9;
+}
+
+.tab.active {
+    background-color: #fff;
+    border-bottom: none;
+    color: #006ce0;
+}
+
+.flex-container {
+    display: flex; 
+    justify-content: space-between;
+    align-items: center; 
+    margin-bottom: 15px;
+}
+
+.flex-item {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.flex-item label {
+    width:30%;
+}
+
+.flex-item input {
+    flex: 1;
+}
+
+.info-item {
+    margin-bottom: 15px; 
+}
+
+.update-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+}
+
+.update-btn:hover {
+    background-color: #218838;
+}
+
+.save-btn i, .cancel-btn i, .update-btn i{
+    margin-right: 8px;
+}
+
+.save-btn:hover, .confirm:hover{
+    background-color: #218838;
+}
+
+.cancel-btn:hover, .cancel:hover {
+    background-color: #c82333;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 10px; 
+    margin-top: 20px;
+}
+
+.save-btn, .cancel-btn, .update-btn, .cancel, .confirm {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.save-btn, .confirm  {
+    background-color: #28a745; 
+    color: white; 
+}
+
+.cancel-btn, .cancel {
+    background-color: #dc3545; 
+    color: white;
+}
+
+.input-container {
+    position: relative;
+    flex: 1;
+}
+
+.input-container input {
+    padding-right: 30px;
+}
+
+.input-container .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    background-color: #fff; 
+    padding: 20px; 
+    border: 1px solid #888; 
+    width: 300px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right; 
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

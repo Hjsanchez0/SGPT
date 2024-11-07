@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a SGPT</title>
+    <link rel="icon" href="{% static 'images/logo-unt.png' %}" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/welcome.css' %}">
+</head>
+<body>
+    <h1>Bienvenido a la plataforma - INFORMATICA</h1>
+
+    <div class="card-container">
+        <a href="{% url 'alumno_login' %}" class="card">
+            <i class="fas fa-user-graduate icon"></i>
+            <h2>Estudiante</h2>
+            <p>Acceso para estudiantes</p>
+        </a>
+
+        <a href="{% url 'administrativo_login' %}" class="card">
+            <i class="fas fa-user-tie icon"></i>
+            <h2>Administrativo</h2>
+            <p>Acceso para personal administrativo</p>
+        </a>
+
+        <a href="{% url 'jurado_login' %}" class="card">
+            <i class="fas fa-user-check icon"></i>
+            <h2>Jurado</h2>
+            <p>Acceso para jurado</p>
+        </a>
+    </div>
+</body>
+</html>

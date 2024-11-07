@@ -1,0 +1,104 @@
+{% extends 'barraLateral_jurado.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/evaluacion_jurado.css' %}">
+<script src="{% static 'js/evaluacion_jurado.js' %}" defer></script>
+<script>
+    const csrfToken = "{{ csrf_token }}"; 
+    const juradoId = "{{ jurado.id }}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Columna derecha: Título y ficha de datos -->
+    <div class="right-column">
+        <h1>EVALUACIÓN - PROYECTO DE TESIS</h1>
+        <hr class="separator">
+        <div class="tab-container">
+            <div class="tab active" id="mostrar-datos-personales">
+                <span class="icono-datos"><i class="fas fa-star"></i></span> Evaluación
+            </div>
+        </div>
+
+        <!-- Sección de Datos del Estudiante -->
+        <div id="datos-alumno" class="section">
+            <div class="info-item flex-container">
+                <div class="flex-item search-container">
+                    <select name="tramite" id="semestre-select" class="icono-select-semestre">
+                        <option disabled selected>Seleccione el semestre</option>
+                        {% for semestre in semestres %}
+                        <option value="{{ semestre.id }}">{{ semestre.semestreAcademico }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <table class="table-resultados">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Semestre</th>
+                                <th>Proyecto</th>
+                                <th>Enviado</th>
+                                <th>Archivo</th>
+                                <th>Revisión</th>
+                                <th>Estado Revisión</th>
+                                <th>Observación</th>
+                                <th>Nota</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultados-busqueda">
+                            {% for proyecto_data in proyectos_data %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
+                                    <td>{{ proyecto_data.asignacion.proyecto.titulo }} </td>
+                                    <td>{{ proyecto_data.asignacion.fechaEnvio }}</td>
+                                    <td>
+                                        {% if proyecto_data.asignacion.drivePdf and proyecto_data.asignacion.drivePdf != "Pendiente" %}
+                                            <button class="ver-pdf" type="button" data-url="{{ proyecto_data.asignacion.drivePdf }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        {% else %}
+                                            {{ proyecto_data.asignacion.drivePdf }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ proyecto_data.asignacion.fechaRevision }}</td>
+                                    <td>{{ proyecto_data.asignacion.estadoRevision }}</td>
+                                    <td>
+                                        {% if proyecto_data.asignacion.observacionPdf and proyecto_data.asignacion.observacionPdf != "Pendiente" %}
+                                            <button class="ver-observacion" type="button" data-url-obs="/media/{{ proyecto_data.asignacion.observacionPdf }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        {% else %}
+                                            {{ proyecto_data.asignacion.observacionPdf }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="{% if proyecto_data.asignacion.notaFinal is not None %}{% if proyecto_data.asignacion.notaFinal < 13.5 %} fondo-rojo {% else %} fondo-azul {% endif %}{% endif %}">
+                                        {{ proyecto_data.asignacion.notaFinal }}
+                                    </td>                          
+                                    <td>
+                                        <a href="{% url 'evaluacion_jurado_proyecto' asignacion_id=proyecto_data.asignacion.id %}" class="register-btn" > <i class="fas fa-clipboard"></i>
+                                            Evaluar
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="10" class="no-resultados">No hay asignaciones registradas.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

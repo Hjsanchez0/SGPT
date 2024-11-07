@@ -1,0 +1,13 @@
+{% extends 'barraLateral_alumno.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="icon" href="{% static 'images/logo-unt.png' %}" type="image/png">
+<link rel="stylesheet" href="{% static 'css/dashboard_alumno.css' %}">
+{% endblock %}
+
+{% block image_block %}
+    <div class="content">
+        <img src="{% static 'images/logo-unt.png' %}" alt="Imagen central" class="center-image">
+    </div>
+{% endblock %}

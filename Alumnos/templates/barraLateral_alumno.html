@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} SGPT {% endblock %}</title>
+    <link rel="icon" href="{% static 'images/logo-unt.png' %}" type="image/png">
+    <link rel="stylesheet" href="{% static 'css/barraLateral_alumno.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="{% static 'js/barraLateral_alumno.js' %}" defer></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="left-header">
+            <i class="fas fa-bars" id="menu-toggle"></i>
+            <h1 class="title">Menú Principal</h1>
+        </div>
+        <div class="right-header">
+            <img src="{% static 'images/logo-unt.png' %}" alt="Logo" class="header-logo">
+            <h1 class="title">SISTEMA PARA GESTIONAR PROYECTO DE TESIS</h1>
+        </div>
+    </header>
+
+    <!-- Panel Lateral Izquierdo -->
+    <aside id="sidebar" class="sidebar closed">
+        <div class="user-info">
+            <i class="fas fa-user-graduate user-image"></i>
+            <div class="user-details">
+                <p>ESTUDIANTE</p>
+                <p>{{alumno.apellidoPat}} {{alumno.apellidoMat}} {{ alumno.nombres }}</p>
+                <p>{{ alumno.codMatricula }}</p>
+            </div>
+        </div>
+
+        <hr>
+        <h4 class="school-info">ESCUELA PROFESIONAL DE INFORMÁTICA - SEDE TRUJILLO</h4>
+        <hr>
+
+        <div class="options">
+            <!-- Botón Perfil -->
+            <div class="dropdown">
+                <div class="sidebar-item" id="profile-btn">
+                    <span><i class="fas fa-user"></i> Perfil</span>
+                    <span id="profile-icon"><i class="fas fa-plus"></i></span>
+                </div>
+                <div id="profile-content">
+                    <a href="{% url 'datosPersonales_alumno' %}"  class="sidebar-subitem" >Datos Personales</a>
+                </div>
+            </div>
+
+            <!-- Botón proyecto de tesis -->
+            <div class="dropdown">
+                <div class="sidebar-item" id="project-btn">
+                    <span><i class="fas fa-book"></i> Proyecto de tesis</span>
+                    <span id="project-icon"><i class="fas fa-plus"></i></span>
+                </div>
+                <div id="project-content">
+                    <a href="{% url 'datosInvestigacion_alumno' %}"  class="sidebar-subitem">Datos de la investigación</a>
+                    <a href="{% url 'tramites_alumno' %}"  class="sidebar-subitem">Trámites</a>
+                    <a href="{% url 'evaluacion_alumno' %}"  class="sidebar-subitem" >Evaluación</a>
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="logout">
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="content">
+        {% block content %}{% endblock %}
+        {% block image_block %}{% endblock %}
+    </main> 
+</body>
+</html>

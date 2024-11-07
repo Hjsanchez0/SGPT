@@ -1,0 +1,91 @@
+{% extends 'barraLateral_admin.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tramites_admin.css' %}">
+<script src="{% static 'js/seguimiento_admin.js' %}" defer></script>
+<script>
+    const csrfToken = "{{ csrf_token }}"; 
+    const administrativoId = "{{ administrativo.id }}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="right-column">
+        <h1>SEGUIMIENTO - PROYECTO DE TESIS</h1>
+        <hr class="separator">
+        <div class="tab-container">
+            <div class="tab active" id="mostrar-datos-personales">
+                <span class="icono-datos"><i class="fas fa-check-circle"></i></span> Verificación de revisiones
+            </div>
+        </div>
+
+        <div id="datos-alumno" class="section">
+            <div class="info-item flex-container">
+                <div class="flex-item search-container">
+                    <select name="tramite" id="semestre-select" class="icono-select-semestre">
+                        <option disabled selected>Seleccione el semestre</option>
+                        {% for semestre in semestres %}
+                        <option value="{{ semestre.id }}">{{ semestre.semestreAcademico }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="info-item flex-container">
+                <div class="flex-item search-container">
+                    <input type="text" id="buscar-dni" class="input-buscar" placeholder="Buscar por DNI">
+                    <button id="buscar-btn" class="buscar-btn">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <table class="table-resultados">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Semestre</th>
+                                <th>Alumnos</th>
+                                <th>DNI</th> 
+                                <th>Título</th>
+                                <th>Jurado</th>
+                                <th>Enviado</th>
+                                <th>Estado Enviado</th>
+                                <th>Revisión</th>
+                                <th>Estado Revisión</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultados-busqueda">
+                            {% for proyecto_data in proyectos_data %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ proyecto_data.semestre }}</td>
+                                    <td>{{ proyecto_data.alumnos }}</td>  
+                                    <td>{{ proyecto_data.dni }}</td>  
+                                    <td>{{ proyecto_data.titulo }}</td>
+                                    <td>
+                                        {% for jurado in proyecto_data.jurado %}
+                                            {{ jurado.nombres }} {{ jurado.apellidoPat }} {{ jurado.apellidoMat }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ proyecto_data.fechaEnvio }}</td>
+                                    <td>{{ proyecto_data.estadoEnvio }}</td>
+                                    <td>{{ proyecto_data.fechaRevision }}</td>
+                                    <td>{{ proyecto_data.estadoRevision }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="10" class="no-resultados">No hay asignaciones registradas.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

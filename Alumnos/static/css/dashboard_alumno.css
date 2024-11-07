@@ -1,0 +1,14 @@
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding-top: 60px;
+    text-align: center;
+}
+
+.center-image {
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: contain;
+}

@@ -1,0 +1,182 @@
+{% extends 'barraLateral_admin.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/datosPersonales_admin.css' %}">
+<script src="{% static 'js/datosPersonales_admin.js' %}" defer></script>
+<script>
+    const csrfToken = "{{ csrf_token }}"; 
+    const administrativoId = "{{ administrativo.id }}";
+    const actualizarDatos = "{% url 'actualizarDatos_admin' %}";
+    const changePassword = "{% url 'changePassword_admin' %}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Columna izquierda: Información del usuario -->
+    <div class="left-column">
+        <h3>ADMINISTRATIVO</h3>
+        <hr class="separator">
+        <div class="info-item">
+            <label><i class="fas fa-user"></i>NOMBRES Y APELLIDOS</label>
+            <span>{{ administrativo.nombres }} {{ administrativo.apellidoPat }} {{ administrativo.apellidoMat }}</span>
+        </div>
+        <div class="info-item">
+            <label><i class="fas fa-birthday-cake"></i>FECHA DE NACIMIENTO</label>
+            <span>{{ administrativo.fechaNacimiento }}</span>
+        </div>
+        <div class="info-item">
+            <label><i class="fas fa-phone"></i>CONTACTO</label>
+            <span>{{ administrativo.celular }}</span>
+        </div>
+        <div class="info-item">
+            <label><i class="fas fa-home"></i>DIRECCIÓN</label>
+            <span>{{ administrativo.domicilio }}</span>
+        </div>
+    </div>
+
+    <!-- Columna derecha: Título y ficha de datos -->
+    <div class="right-column">
+        <h1>FICHA DE DATOS PERSONALES - PERFIL</h1>
+        <hr class="separator">
+        <div class="tab-container">
+            <div class="tab active" id="mostrar-datos-personales">
+                <span class="icono-datos"><i class="fas fa-user-tie"></i></span> Datos del Administrativo
+            </div>
+            <div class="tab" id="mostrar-configuracion">
+                <span class="icono-configuracion"><i class="fas fa-cog"></i></span> Configuración
+            </div>
+        </div>
+
+        <!-- Sección de Datos del Administrativo -->
+        <div id="datos-alumno" class="section">
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Apellido Paterno:</label>
+                    <input type="text" value="{{ administrativo.apellidoPat }}" readonly>
+                </div>
+                <div class="flex-item">
+                    <label>Apellido Materno:</label>
+                    <input type="text" value="{{ administrativo.apellidoMat }}" readonly>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Nombre:</label>
+                    <input type="text" value="{{ administrativo.nombres }}" readonly>
+                </div>
+                <div class="flex-item">
+                    <label>Correo:</label>
+                    <input type="email" id="email" value="{{ administrativo.email }}">
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>DNI:</label>
+                    <input type="text" value="{{ administrativo.dni }}" readonly>
+                </div>
+                <div class="flex-item">
+                    <label>Cód. Trabajador:</label>
+                    <input type="text" value="{{ administrativo.codTrabajador }}" readonly>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Sexo:</label>
+                    <select id="sexo">
+                        <option value="M" {% if administrativo.sexo == "M" %}selected{% endif %}>MASCULINO</option>
+                        <option value="F" {% if administrativo.sexo == "F" %}selected{% endif %}>FEMENINO</option>
+                    </select>
+                </div>
+                <div class="flex-item">
+                    <label>Fecha de Nacimiento:</label>
+                    <input type="date" id="fechaNacimiento" value="{{ administrativo.fechaNacimiento|date:'Y-m-d' }}">
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Domicilio:</label>
+                    <input type="text" id="domicilio" value="{{ administrativo.domicilio }}">
+                </div>
+                <div class="flex-item">
+                    <label>Celular:</label>
+                    <input type="text" id="celular" value="{{ administrativo.celular }}">
+                </div>
+            </div>
+            <button class="update-btn"><i class="fas fa-sync-alt"></i> Actualizar</button>
+
+        </div>
+
+        <!-- Sección de Configuración de contraseña -->
+        <div id="configuracion" class="section" style="display:none;">
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Contraseña Actual:</label>
+                    <div class="input-container">
+                        <input type="password" id="current-password" placeholder="Ingrese aquí su contraseña actual." required>
+                        <i class="fas fa-eye toggle-password" id="toggleCurrentPassword" onclick="togglePassword('current-password', this)"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Nueva Contraseña:</label>
+                    <div class="input-container">
+                        <input type="password" id="new-password" placeholder="Ingrese aquí su nueva contraseña." required>
+                        <i class="fas fa-eye toggle-password" id="toggleNewPassword" style="cursor: pointer;" onclick="togglePassword('new-password', this)"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Repite Contraseña:</label>
+                    <div class="input-container">
+                        <input type="password" id="repeat-password" placeholder="Ingrese aquí su nueva contraseña."required>
+                        <i class="fas fa-eye toggle-password" id="toggleRepeatPassword" style="cursor: pointer;" onclick="togglePassword('repeat-password', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="save-btn"><i class="fas fa-save"></i> Guardar</button>
+            </div>
+        </div>
+
+        <!-- Modal de confirmación de datos -->
+        <div id="confirmation-modal1" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-modal1">&times;</span>
+                <h3>Confirmar actualización</h3>
+                <p>¿Estás seguro de que deseas actualizar los datos?</p>
+                <div class="modal-buttons">
+                    <button id="confirm-update" class="btn confirm"><i class="fas fa-check"></i> Confirmar</button>
+                    <button id="cancel-update" class="btn cancel"><i class="fas fa-trash"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal de confirmación de contraseña -->
+        <div id="confirmation-modal2" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-modal2">&times;</span>
+                <h3>Confirmar actualización</h3>
+                <p>¿Estás seguro de que deseas actualizar la contraseña</p>
+                <div class="modal-buttons">
+                    <button id="confirm-change" class="btn confirm"><i class="fas fa-check"></i> Confirmar</button>
+                    <button id="cancel-change" class="btn cancel"><i class="fas fa-trash"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Mensaje -->
+        <div id="message-modal" class="modal">
+            <div class="modal-content">
+                <h3 id="message-title">Mensaje</h3>
+                <p id="message-body"></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,184 @@
+.container {
+    margin: 90px 20px 20px 20px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-column {
+    width: 100%; /*Cambiar a 60%*/
+}
+
+/*Descomentar*/
+/*.right-column {
+    width: 40%;
+}*/ 
+
+iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.info-item {
+    margin-bottom: 15px;
+}
+
+.info-item .obs {
+    display: block;
+    font-weight: bold;
+    float: left;
+    margin-bottom: 5px;
+}
+
+.separator {
+    border: 0;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+}
+
+.section {
+    display: block;
+}
+
+.flex-item textarea{
+    height: 100px; 
+    resize: none;
+    flex: 1;
+    width: 100%;
+    border: 1px solid #ddd; 
+    font-family: sans-serif;
+}
+ 
+.info-item {
+    margin-bottom: 15px; 
+}
+
+.register-btn i {
+    margin-right: 8px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 10px; 
+    margin-top: 20px;
+}
+
+.btn-terminar, .confirm, .cancel {
+    padding: 8px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.register-btn {
+    display: inline-flex;
+    align-items: center; 
+    padding: 10px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.register-btn:hover{
+    background-color: #000000;
+}
+
+.register-btn {
+    background-color: #3e3e3e; 
+    color: white; 
+}
+
+.cancel:hover {
+    background-color: #c82333;
+}
+
+.cancel {
+    background-color: #dc3545; 
+    color: white;
+}
+.btn-terminar:hover, .confirm:hover{
+    background-color: #218838;
+}
+
+.btn-terminar, .confirm {
+    background-color: #28a745; 
+    color: white; 
+}
+
+.table-resultados {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-resultados th, .table-resultados td {
+    border: 1px solid #ddd; 
+    padding: 10px;
+    text-align: center;
+}
+
+.table-resultados th {
+    background-color: #f2f2f2;
+}
+
+.table-resultados td .btn-calificacion{
+    display: inline-flex;
+    align-items: center;
+}
+
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    background-color: #fff; 
+    padding: 20px; 
+    border: 1px solid #888; 
+    width: 300px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right; 
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

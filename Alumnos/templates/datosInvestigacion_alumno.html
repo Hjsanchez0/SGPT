@@ -1,0 +1,159 @@
+{% extends 'barraLateral_alumno.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/datosInvestigacion_alumno.css' %}">
+<script src="{% static 'js/datosInvestigacion_alumno.js' %}" defer></script>
+<script>
+    const csrfToken = "{{ csrf_token }}";
+    const alumnoId = "{{ alumno.id }}";
+    const buscarEstudiante = "{% url 'buscar_estudiante' %}";
+    const guardarInvestigacion = "{% url 'guardarInvestigacion' %}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Columna derecha: Título y ficha de datos -->
+    <div class="right-column">
+        <h1>DATOS DE LA INVESTIGACIÓN - PROYECTO DE TESIS</h1>
+        <hr class="separator">
+        <div class="tab-container">
+            <div class="tab active" id="mostrar-datos-autores">
+                <span class="icono-autores"><i class="fas fa-users"></i></span> Autores
+            </div>
+            <div class="tab" id="datos-investigacion">
+                <span class="icono-investigacion"><i class="fas fa-flask"></i></span> Investigación
+            </div>
+        </div>
+
+        <!-- Sección de Autores -->
+        <div id="datos-autores" class="section">
+            <div class="info-item flex-container">
+                <div class="flex-item search-container">
+                    <input type="text" id="buscar-dni" class="input-buscar" placeholder="Buscar por DNI">
+                    <input type="text" id="buscar-codMatricula" class="input-buscar" placeholder="Buscar por Cód. Matrícula">
+                    <button id="buscar-btn" class="buscar-btn">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <table class="table-resultados">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>DNI</th>
+                                <th>Cód. Matrícula</th>
+                                <th>Apellidos</th>
+                                <th>Nombres</th>
+                                <th>Agregar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultados-busqueda">
+                            {% for estudiante in estudiantes_secundarios %}
+                            <tr>
+                                <td>1</td>
+                                <td>{{ estudiante.alumno.dni }}</td>
+                                <td>{{ estudiante.alumno.codMatricula }}</td>
+                                <td>{{ estudiante.alumno.apellidoPat }} {{ estudiante.alumno.apellidoMat }}</td>
+                                <td>{{ estudiante.alumno.nombres }}</td>
+                                <td>Agregado!</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="no-resultados">Sí el proyecto es en pareja, agrega al estudiante.
+                                    Caso contrario, pase a la siguiente sección.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <button class="next-btn"><i class="fas fa-arrow-right"></i> Siguiente</button>
+        </div>
+
+        <!-- Sección de Investigación -->
+        <div id="investigacion" class="section" style="display:none;">
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Semestre:</label>
+                    <select name="tramite" id="semestre-select" class="icono-select-semestre">
+                        <option disabled>Seleccione el semestre</option>
+                        {% for semestre in semestres %}
+                            <option value="{{ semestre.id }}" {% if semestre_actual and semestre.id == semestre_actual.id %}selected{% endif %}>
+                                {{ semestre.semestreAcademico }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Título:</label>
+                    <input type="text" id="titulo" placeholder="Ingrese el título de su investigación"
+                        value="{{ proyecto.titulo }}" required>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Institución / Empresa:</label>
+                    <input type="text" id="institucion" placeholder="Ingrese la institución o empresa"
+                        value="{{ proyecto.institucion }}" required>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>RUC:</label>
+                    <input type="text" id="ruc-input" placeholder="Ingrese el RUC" value="{{ proyecto.ruc }}" required>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Director:</label>
+                    <input type="text" id="director" placeholder="Ingrese el nombre del director o gerente"
+                        value="{{ proyecto.director }}" required>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Cargo:</label>
+                    <input type="text" id="cargo" placeholder="Ingrese el cargo del director"
+                        value="{{ proyecto.cargo }}" required>
+                </div>
+            </div>
+            <div class="info-item flex-container">
+                <div class="flex-item">
+                    <label>Dirección:</label>
+                    <input type="text" id="direccion" placeholder="Ingrese la dirección de la institución o empresa"
+                        value="{{ proyecto.direccion }}" required>
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="button" class="next-btn" id="back-btn"><i class="fas fa-arrow-left"></i> Atrás</button>
+                <button type="submit" class="save-btn"><i class="fas fa-save"></i> Guardar</button>
+            </div>
+        </div>
+
+        <div id="confirmation-modal1" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-modal1">&times;</span>
+                <h3>Confirmar guardado</h3>
+                <p>¿Estás seguro de que deseas guardar los datos?</p>
+                <div class="modal-buttons">
+                    <button id="confirm-update" class="btn confirm"><i class="fas fa-check"></i> Confirmar</button>
+                    <button id="cancel-update" class="btn cancel"><i class="fas fa-trash"></i> Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="message-modal" class="modal">
+            <div class="modal-content">
+                <p id="message-body"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
