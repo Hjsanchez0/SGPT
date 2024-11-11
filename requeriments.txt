@@ -1,5 +1,5 @@
 python3 -m pip install --upgrade pip
-pip install Django=5.1.1
+pip install Django==5.1.1
 pip install mysqlclient==2.2.4
 pip install reportlab
 pip install pytz
