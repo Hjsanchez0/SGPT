@@ -247,12 +247,13 @@ def guardarInvestigacion(request):
                 Proyecto_Alumno.objects.create(
                     alumno=alumno,
                     proyecto=proyecto,
-                    semestre=semestre
+                    semestre=semestre,
+                    dictamenPdf='Pendiente'
                 )
 
                 for estudiante_id in selected_ids:
                     estudiante = Alumno.objects.get(id=estudiante_id)
-                    Proyecto_Alumno.objects.create(alumno=estudiante, proyecto=proyecto, semestre=semestre)
+                    Proyecto_Alumno.objects.create(alumno=estudiante, proyecto=proyecto, semestre=semestre, dictamenPdf='Pendiente')
 
                 for _ in range(3):
                     Asignacion.objects.create(
@@ -441,6 +442,7 @@ def evaluacion_alumno(request):
                 'asignaciones': asignaciones,
                 'semestre': proyecto_alumno.semestre,
                 'nota_promocional': nota_promocional,
+                'dictamenPdf': proyecto_alumno.dictamenPdf
             })
         
         return render(request, 'evaluacion_alumno.html', {

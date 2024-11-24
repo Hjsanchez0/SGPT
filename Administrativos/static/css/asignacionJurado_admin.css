@@ -32,7 +32,7 @@
     margin-right: 10px;
 }
 
-.info-item span, .info-item select, .info-item input, .flex-item textarea, .flex-item select {
+.info-item span, .info-item select, .info-item input, .flex-item textarea, .flex-item select, #dictamen-pdf{
     display: block;
     width: 100%;
     padding: 8px;
@@ -48,7 +48,7 @@
     max-width: 475px;
 }
 
-.info-item select, .flex-item select{
+.info-item select, .flex-item select {
     background: transparent;
 }
 
@@ -141,6 +141,18 @@
     float: right;
 }
 
+.ver-pdfDictamen{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ver-pdfDictamen{
+    background-color: transparent;
+}
 
 .register-btn:hover, .confirm:hover, .agregar-jurado:hover{
     background-color: #218838;

@@ -36,6 +36,7 @@
                         <thead>
                             <tr>
                                 <th>Semestre</th>
+                                <th>Dictamen</th>
                                 <th>Unidad</th>
                                 <th>Promedio</th>
                             </tr>
@@ -45,6 +46,13 @@
                                     {% for proyecto_data in proyectos_data %}
                                     <tr>
                                         <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
+                                        <td>{% if proyecto_data.dictamenPdf and proyecto_data.dictamenPdf != 'Pendiente' %}
+                                            <button class="ver-pdfDictamen" type="button" data-url="/media/{{ proyecto_data.dictamenPdf }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        {% else %}
+                                            {{ proyecto_data.dictamenPdf }}
+                                        {% endif %}</td>
                                         <td>III</td>
                                         <td class="{% if proyecto_data.nota_promocional is not None %}{% if proyecto_data.nota_promocional < 13.5 %} fondo-rojo {% else %} fondo-azul {% endif %}{% endif %}">
                                             {{ proyecto_data.nota_promocional }}
@@ -53,7 +61,7 @@
                                     {% endfor %}
                                 {% else %}
                                     <tr>
-                                        <td colspan="3" class="no-resultados">No hay datos de promedio promocional.</td>
+                                        <td colspan="4" class="no-resultados">No hay datos de promedio promocional.</td>
                                     </tr>
                                 {% endif %}
                             </tbody>

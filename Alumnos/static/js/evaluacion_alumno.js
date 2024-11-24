@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cancelarGuardar = document.getElementById('cancelar-guardar');
     const verEnlaceDrive = document.querySelectorAll('.ver-drive');
     const verObservacion = document.querySelectorAll('.ver-observacion');
+    const verDictamen = document.querySelectorAll('.ver-pdfDictamen');
 
     verEnlaceDrive.forEach(function(verEnlaceDrive){
         verEnlaceDrive.addEventListener('click', function(){
@@ -19,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function () {
         verObservacion.addEventListener('click', function(){
             const urlObs = this.getAttribute('data-url-obs');
             window.open(urlObs, '_blank');
+        })
+    })
+
+    verDictamen.forEach(function(verDictamen){
+        verDictamen.addEventListener('click', function(){
+            const urlDrive = this.getAttribute('data-url');
+            window.open(urlDrive, '_blank');
         })
     })
 

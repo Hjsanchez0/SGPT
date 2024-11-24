@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth import logout
 from collections import defaultdict
+from django.core.files.storage import default_storage
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.conf import settings
@@ -213,7 +214,6 @@ def enviar_respuesta(request):
                     carta.observacionFut = 'Ninguna'
                     carta.fechaCarta = date.today()
 
-                    # Guarda solo la ruta relativa desde 'pdfCarta' en adelante
                     carta.pdfCarta = os.path.join('pdfCarta', f'carta_acceso_{carta_id}.pdf')
                     carta.save()
 
@@ -242,7 +242,9 @@ def asignacionJurado_admin(request):
         
         for asignacion in asignaciones:
             proyecto_id = asignacion.proyecto.id
-            
+
+            proyecto_alumno = Proyecto_Alumno.objects.filter(proyecto_id=proyecto_id).first()
+
             if proyecto_id not in proyectos:
                 proyectos[proyecto_id] = {
                     'id': proyecto_id,
@@ -253,7 +255,9 @@ def asignacionJurado_admin(request):
                         'presidente': {'id': None, 'nombre_completo': None},
                         'vocal': {'id': None, 'nombre_completo': None},
                         'secretario': {'id': None, 'nombre_completo': None}
-                    }
+                    },
+                    'dictamen_pdf': proyecto_alumno.dictamenPdf
+                    
                 }
 
             if asignacion.jurado:
@@ -281,16 +285,28 @@ def asignacionJurado_admin(request):
 
 def actualizar_jurados(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        presidente_id = data.get('presidenteId')
-        vocal_id = data.get('vocalId')
-        secretario_id = data.get('secretarioId')
-        proyecto_id = data.get('proyectoId')
-        administrativo_id = data.get('administrativoId')
+        presidente_id = request.POST.get('presidenteId')
+        vocal_id = request.POST.get('vocalId')
+        secretario_id = request.POST.get('secretarioId')
+        proyecto_id = request.POST.get('proyectoId')
+        administrativo_id = request.POST.get('administrativoId')
+        dictamen_pdf = request.FILES.get('dictamenPdf')
 
         try:
+            proyecto_alumnos = Proyecto_Alumno.objects.filter(proyecto_id=proyecto_id)
+
+            if dictamen_pdf:
+                for proyecto_alumno in proyecto_alumnos:
+                    if proyecto_alumno.dictamenPdf != 'Pendiente':
+                        return JsonResponse({'success': False, 'error': 'Ya existe un dictamen PDF asociado a este proyecto.'})
+
+                archivo_path = default_storage.save(f'pdfDictamen/{dictamen_pdf.name}', dictamen_pdf)
+
+                for proyecto_alumno in proyecto_alumnos:
+                    proyecto_alumno.dictamenPdf = archivo_path
+                    proyecto_alumno.save()
+            
             asignaciones = Asignacion.objects.filter(proyecto_id=proyecto_id, jurado__isnull=True)[:3]
-        
             if len(asignaciones) < 3:
                 return JsonResponse({'success': False, 'error': 'No hay suficientes asignaciones disponibles.'})
 
@@ -308,13 +324,16 @@ def actualizar_jurados(request):
             asignaciones[2].fechaAsignacion = fecha_actual
             asignaciones[2].administrativo_id = administrativo_id
 
-            asignaciones[0].save()
-            asignaciones[1].save()
-            asignaciones[2].save()
+            for asignacion in asignaciones:
+                asignacion.save()
 
             return JsonResponse({'success': True})
+        except Proyecto_Alumno.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'El proyecto no existe.'})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido.'})
 
 def eliminar_jurados(request):
     if request.method == 'POST':
@@ -333,7 +352,19 @@ def eliminar_jurados(request):
                 asignacion.administrativo_id = None
                 asignacion.save()
 
+            proyecto_alumnos = Proyecto_Alumno.objects.filter(proyecto_id=proyecto_id)
+
+            for proyecto_alumno in proyecto_alumnos:
+                if proyecto_alumno.dictamenPdf:
+                    dictamen_pdf_path = proyecto_alumno.dictamenPdf.path
+                    if os.path.exists(dictamen_pdf_path):
+                        os.remove(dictamen_pdf_path)
+
+                    proyecto_alumno.dictamenPdf = 'Pendiente' 
+                    proyecto_alumno.save() 
+
             return JsonResponse({'success': True})
+
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
 

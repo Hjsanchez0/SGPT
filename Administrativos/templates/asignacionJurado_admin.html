@@ -43,6 +43,7 @@
                                 <th>N°</th>
                                 <th>Título</th>
                                 <th>Semestre</th>
+                                <th>Dictamen</th>
                                 <th>Fecha</th>
                                 <th>Presidente</th>
                                 <th>Vocal</th>
@@ -57,6 +58,13 @@
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ proyecto.titulo }}</td>
                                         <td>{{ proyecto.semestre }}</td>
+                                        <td>{% if proyecto.dictamen_pdf and proyecto.dictamen_pdf != 'Pendiente' %}
+                                            <button class="ver-pdfDictamen" type="button" data-url="/media/{{ proyecto.dictamen_pdf }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        {% else %}
+                                            {{ proyecto.dictamen_pdf }}
+                                        {% endif %}</td>
                                         <td>{{ proyecto.fecha }}</td>
                                         <td>{{ proyecto.jurados.presidente.nombre_completo }}</td>
                                         <td>{{ proyecto.jurados.vocal.nombre_completo }}</td>
@@ -88,9 +96,15 @@
         <div id="agregar-jurado-modal" class="modal">
             <div class="modal-content">
                 <span class="close" id="close-agregar-jurado-modal">&times;</span>
-                <h3>Agregar Jurado</h3>
+                <h3>Agregar Jurado y Dictamen</h3>
                 <hr class="separator">
                 <div class="flex-item" >
+                    <label for="dictamen-pdf">Subir Dictamen (PDF):</label>
+                </div>
+                <div class="flex-item" >
+                    <input type="file" id="dictamen-pdf" name="dictamenPdf" accept="application/pdf" required>
+                </div>
+                <div class="flex-item" style="margin-top: 10px;">
                     <label for="presidente-select">Presidente:</label>
                 </div>
                 <div class="flex-item" >
@@ -155,7 +169,7 @@
         <div id="eliminar-jurado-modal" class="modal">
             <div class="modal-content">
                 <h3>Confirmación de Eliminación</h3>
-                <p>¿Está seguro de que desea eliminar los jurados y la fecha de este proyecto?</p>
+                <p>¿Está seguro de que desea eliminar los jurados de este proyecto?</p>
                 <div class="modal-buttons">
                     <button id="confirm-eliminar-jurado" class="btn confirm"><i class="fas fa-check"></i> Aceptar</button>
                     <button id="cancel-eliminar-jurado" class="btn cancel"><i class="fas fa-times"></i> Cancelar</button>
