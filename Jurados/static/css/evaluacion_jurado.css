@@ -135,15 +135,6 @@
     margin-top: 20px;
 }
 
-.observar-btn{
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-}
-
 .register-btn {
     display: inline-flex;
     align-items: center; 
@@ -155,7 +146,7 @@
     text-decoration: none;
 }
 
-.ver-pdf, .ver-observacion{
+.ver-pdf, .ver-observacion, .ver-dictamen{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -164,7 +155,7 @@
     font-weight: bold;
 }
 
-.ver-pdf, .ver-observacion{
+.ver-pdf, .ver-observacion, .ver-dictamen{
     background-color: transparent;
 }
 
@@ -178,16 +169,6 @@
 
 .register-btn:hover{
     background-color: #218838;
-}
-
-
-.observar-btn{
-    background-color: rgb(91, 91, 91); 
-    color: white; 
-}
-
-.observar-btn:hover{
-    background-color: rgb(26, 26, 26); 
 }
 
 .register-btn {

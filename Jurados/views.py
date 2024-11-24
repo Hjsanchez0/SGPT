@@ -7,7 +7,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from .forms import LoginForm, ReestablecerForm, ResetearForm
 from .models import Jurado, Asignacion
-from Alumnos.models import Semestre
+from Alumnos.models import Semestre, Proyecto_Alumno
 from datetime import date
 from .utils import generar_observacion
 import json, os
@@ -139,10 +139,21 @@ def evaluacion_jurado(request):
 
         proyectos_data = []
         for asignacion in asignaciones:
+
+            proyecto = asignacion.proyecto
+
+            try:
+                proyecto_alumno = Proyecto_Alumno.objects.filter(proyecto_id=proyecto.id).first()
+                dictamen_pdf = proyecto_alumno.dictamenPdf
+                
+            except Proyecto_Alumno.DoesNotExist:
+                dictamen_pdf = None 
+        
             proyectos_data.append({
                 'asignacion': asignacion,
                 'semestre': asignacion.semestre,
-                'proyecto': asignacion.proyecto
+                'proyecto': asignacion.proyecto,
+                'dictamen_pdf': dictamen_pdf
             })
         
         return render(request, 'evaluacion_jurado.html', {'jurado': jurado, 'semestres': semestres, 'proyectos_data': proyectos_data,})
