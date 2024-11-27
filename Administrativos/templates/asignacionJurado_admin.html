@@ -43,7 +43,7 @@
                                 <th>N°</th>
                                 <th>Título</th>
                                 <th>Semestre</th>
-                                <th>Dictamen</th>
+                                <th>Resolucion</th>
                                 <th>Fecha</th>
                                 <th>Presidente</th>
                                 <th>Vocal</th>
@@ -58,12 +58,12 @@
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ proyecto.titulo }}</td>
                                         <td>{{ proyecto.semestre }}</td>
-                                        <td>{% if proyecto.dictamen_pdf and proyecto.dictamen_pdf != 'Pendiente' %}
-                                            <button class="ver-pdfDictamen" type="button" data-url="/media/{{ proyecto.dictamen_pdf }}">
+                                        <td>{% if proyecto.resolucion_pdf and proyecto.resolucion_pdf != 'Pendiente' %}
+                                            <button class="ver-pdfResolucion" type="button" data-url="/media/{{ proyecto.resolucion_pdf }}">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                         {% else %}
-                                            {{ proyecto.dictamen_pdf }}
+                                            {{ proyecto.resolucion_pdf }}
                                         {% endif %}</td>
                                         <td>{{ proyecto.fecha }}</td>
                                         <td>{{ proyecto.jurados.presidente.nombre_completo }}</td>
@@ -96,13 +96,13 @@
         <div id="agregar-jurado-modal" class="modal">
             <div class="modal-content">
                 <span class="close" id="close-agregar-jurado-modal">&times;</span>
-                <h3>Agregar Jurado y Dictamen</h3>
+                <h3>Agregar Jurado y Resolucion</h3>
                 <hr class="separator">
                 <div class="flex-item" >
-                    <label for="dictamen-pdf">Subir Dictamen (PDF):</label>
+                    <label for="resolucion-pdf">Subir Resolucion (PDF):</label>
                 </div>
                 <div class="flex-item" >
-                    <input type="file" id="dictamen-pdf" name="dictamenPdf" accept="application/pdf" required>
+                    <input type="file" id="resolucion-pdf" name="resolucionPdf" accept="application/pdf" required>
                 </div>
                 <div class="flex-item" style="margin-top: 10px;">
                     <label for="presidente-select">Presidente:</label>

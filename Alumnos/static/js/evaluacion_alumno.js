@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cancelarGuardar = document.getElementById('cancelar-guardar');
     const verEnlaceDrive = document.querySelectorAll('.ver-drive');
     const verObservacion = document.querySelectorAll('.ver-observacion');
-    const verDictamen = document.querySelectorAll('.ver-pdfDictamen');
+    const verResolucion = document.querySelectorAll('.ver-pdfResolucion');
 
     verEnlaceDrive.forEach(function(verEnlaceDrive){
         verEnlaceDrive.addEventListener('click', function(){
@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     })
 
-    verDictamen.forEach(function(verDictamen){
-        verDictamen.addEventListener('click', function(){
+    verResolucion.forEach(function(verResolucion){
+        verResolucion.addEventListener('click', function(){
             const urlDrive = this.getAttribute('data-url');
             window.open(urlDrive, '_blank');
         })

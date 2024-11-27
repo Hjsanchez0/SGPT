@@ -32,7 +32,7 @@
     margin-right: 10px;
 }
 
-.info-item span, .info-item select, .info-item input, .flex-item textarea, .flex-item select, #dictamen-pdf{
+.info-item span, .info-item select, .info-item input, .flex-item textarea, .flex-item select, #resolucion-pdf{
     display: block;
     width: 100%;
     padding: 8px;
@@ -141,7 +141,7 @@
     float: right;
 }
 
-.ver-pdfDictamen{
+.ver-pdfResolucion{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -150,7 +150,7 @@
     font-weight: bold;
 }
 
-.ver-pdfDictamen{
+.ver-pdfResolucion{
     background-color: transparent;
 }
 

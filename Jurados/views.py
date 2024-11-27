@@ -144,16 +144,16 @@ def evaluacion_jurado(request):
 
             try:
                 proyecto_alumno = Proyecto_Alumno.objects.filter(proyecto_id=proyecto.id).first()
-                dictamen_pdf = proyecto_alumno.dictamenPdf
+                resolucion_pdf = proyecto_alumno.resolucionPdf
                 
             except Proyecto_Alumno.DoesNotExist:
-                dictamen_pdf = None 
+                resolucion_pdf = None 
         
             proyectos_data.append({
                 'asignacion': asignacion,
                 'semestre': asignacion.semestre,
                 'proyecto': asignacion.proyecto,
-                'dictamen_pdf': dictamen_pdf
+                'resolucion_pdf': resolucion_pdf
             })
         
         return render(request, 'evaluacion_jurado.html', {'jurado': jurado, 'semestres': semestres, 'proyectos_data': proyectos_data,})

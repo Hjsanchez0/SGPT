@@ -49,5 +49,5 @@ class Proyecto_Alumno(models.Model):
     semestre = models.ForeignKey(Semestre, on_delete=models.CASCADE, null=True, blank=True)
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
     carta_acceso = models.ForeignKey(Carta_Acceso, on_delete=models.CASCADE, null=True, blank=True)
-    dictamenPdf = models.FileField(upload_to='pdfDictamen/', null=True, blank=True)
+    resolucionPdf = models.FileField(upload_to='pdfResolucion/', null=True, blank=True)
     notaPromocional = models.IntegerField(null=True, blank=True)

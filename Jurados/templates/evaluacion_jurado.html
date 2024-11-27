@@ -42,7 +42,7 @@
                                 <th>N°</th>
                                 <th>Semestre</th>
                                 <th>Proyecto</th>
-                                <th>Dictamen</th>
+                                <th>Resolucion</th>
                                 <th>Enviado</th>
                                 <th>Archivo</th>
                                 <th>Revisión</th>
@@ -58,12 +58,12 @@
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
                                     <td>{{ proyecto_data.asignacion.proyecto.titulo }} </td>
-                                    <td> {% if proyecto_data.dictamen_pdf and proyecto_data.dictamen_pdf != "Pendiente" %}
-                                        <button class="ver-dictamen" type="button" data-url="/media/{{ proyecto_data.dictamen_pdf }}">
+                                    <td> {% if proyecto_data.resolucion_pdf and proyecto_data.resolucion_pdf != "Pendiente" %}
+                                        <button class="ver-resolucion" type="button" data-url="/media/{{ proyecto_data.resolucion_pdf }}">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     {% else %}
-                                        {{ proyecto_data.dictamen_pdf }}
+                                        {{ proyecto_data.resolucion_pdf }}
                                     {% endif %} </td>
                                     <td>{{ proyecto_data.asignacion.fechaEnvio }}</td>
                                     <td>

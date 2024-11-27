@@ -132,7 +132,7 @@
     float: right;
 }
 
-.ver-drive, .ver-observacion, .ver-pdfDictamen{
+.ver-drive, .ver-observacion, .ver-pdfResolucion{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -141,7 +141,7 @@
     font-weight: bold;
 }
 
-.ver-drive, .ver-observacion, .ver-pdfDictamen{
+.ver-drive, .ver-observacion, .ver-pdfResolucion{
     background-color: transparent;
 }
 

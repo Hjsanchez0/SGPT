@@ -146,7 +146,7 @@
     text-decoration: none;
 }
 
-.ver-pdf, .ver-observacion, .ver-dictamen{
+.ver-pdf, .ver-observacion, .ver-resolucion{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -155,7 +155,7 @@
     font-weight: bold;
 }
 
-.ver-pdf, .ver-observacion, .ver-dictamen{
+.ver-pdf, .ver-observacion, .ver-resolucion{
     background-color: transparent;
 }
 

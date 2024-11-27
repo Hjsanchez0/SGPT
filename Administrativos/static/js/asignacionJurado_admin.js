@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const eliminarJuradoModal = document.getElementById('eliminar-jurado-modal');
     const confirmEliminarJurado = document.getElementById('confirm-eliminar-jurado');
     const cancelEliminarJurado = document.getElementById('cancel-eliminar-jurado');
-    const verDictamen = document.querySelectorAll('.ver-pdfDictamen');
+    const verResolucion = document.querySelectorAll('.ver-pdfResolucion');
 
-    verDictamen.forEach(function(verDictamen){
-        verDictamen.addEventListener('click', function(){
+    verResolucion.forEach(function(verResolucion){
+        verResolucion.addEventListener('click', function(){
             const urlDrive = this.getAttribute('data-url');
             window.open(urlDrive, '_blank');
         })
@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const vocalId = document.getElementById('vocal-select').value;
         const secretarioId = document.getElementById('secretario-select').value;
         const proyectoId = agregarJuradoModal.getAttribute('data-proyecto-id');
-        const dictamenPdf = document.getElementById('dictamen-pdf').files[0]; 
+        const resolucionPdf = document.getElementById('resolucion-pdf').files[0]; 
 
-        if (presidenteId === '' || vocalId === '' || secretarioId === ''  || !dictamenPdf) {
+        if (presidenteId === '' || vocalId === '' || secretarioId === ''  || !resolucionPdf) {
             showMessageModal('Todos los roles deben ser seleccionados y el PDF debe subirse antes de asignar.');
             return; 
         }
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('secretarioId', secretarioId);
             formData.append('proyectoId', proyectoId);
             formData.append('administrativoId', administrativoId);
-            formData.append('dictamenPdf', dictamenPdf);
+            formData.append('resolucionPdf', resolucionPdf);
 
             fetch(actualizarJurado, {
                 method: 'POST',
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('presidente-select').value = '';
                     document.getElementById('vocal-select').value = '';
                     document.getElementById('secretario-select').value = '';
-                    document.getElementById('dictamen-pdf').value = ''; 
+                    document.getElementById('resolucion-pdf').value = ''; 
                     
                     setTimeout(function() {
                         location.reload();

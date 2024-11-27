@@ -256,7 +256,7 @@ def asignacionJurado_admin(request):
                         'vocal': {'id': None, 'nombre_completo': None},
                         'secretario': {'id': None, 'nombre_completo': None}
                     },
-                    'dictamen_pdf': proyecto_alumno.dictamenPdf
+                    'resolucion_pdf': proyecto_alumno.resolucionPdf
                     
                 }
 
@@ -290,20 +290,20 @@ def actualizar_jurados(request):
         secretario_id = request.POST.get('secretarioId')
         proyecto_id = request.POST.get('proyectoId')
         administrativo_id = request.POST.get('administrativoId')
-        dictamen_pdf = request.FILES.get('dictamenPdf')
+        resolucion_pdf = request.FILES.get('resolucionPdf')
 
         try:
             proyecto_alumnos = Proyecto_Alumno.objects.filter(proyecto_id=proyecto_id)
 
-            if dictamen_pdf:
+            if resolucion_pdf:
                 for proyecto_alumno in proyecto_alumnos:
-                    if proyecto_alumno.dictamenPdf != 'Pendiente':
-                        return JsonResponse({'success': False, 'error': 'Ya existe un dictamen PDF asociado a este proyecto.'})
+                    if proyecto_alumno.resolucionPdf != 'Pendiente':
+                        return JsonResponse({'success': False, 'error': 'Ya existe una resolucion asociado a este proyecto.'})
 
-                archivo_path = default_storage.save(f'pdfDictamen/{dictamen_pdf.name}', dictamen_pdf)
+                archivo_path = default_storage.save(f'pdfResolucion/{resolucion_pdf.name}', resolucion_pdf)
 
                 for proyecto_alumno in proyecto_alumnos:
-                    proyecto_alumno.dictamenPdf = archivo_path
+                    proyecto_alumno.resolucionPdf = archivo_path
                     proyecto_alumno.save()
             
             asignaciones = Asignacion.objects.filter(proyecto_id=proyecto_id, jurado__isnull=True)[:3]
@@ -355,12 +355,12 @@ def eliminar_jurados(request):
             proyecto_alumnos = Proyecto_Alumno.objects.filter(proyecto_id=proyecto_id)
 
             for proyecto_alumno in proyecto_alumnos:
-                if proyecto_alumno.dictamenPdf:
-                    dictamen_pdf_path = proyecto_alumno.dictamenPdf.path
-                    if os.path.exists(dictamen_pdf_path):
-                        os.remove(dictamen_pdf_path)
+                if proyecto_alumno.resolucionPdf:
+                    resolucion_pdf_path = proyecto_alumno.resolucionPdf.path
+                    if os.path.exists(resolucion_pdf_path):
+                        os.remove(resolucion_pdf_path)
 
-                    proyecto_alumno.dictamenPdf = 'Pendiente' 
+                    proyecto_alumno.resolucionPdf = 'Pendiente' 
                     proyecto_alumno.save() 
 
             return JsonResponse({'success': True})
