@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth import logout
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
+from django.core.files.storage import default_storage
 from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
 from .forms import LoginForm, ReestablecerForm, ResetearForm
@@ -248,12 +249,13 @@ def guardarInvestigacion(request):
                     alumno=alumno,
                     proyecto=proyecto,
                     semestre=semestre,
-                    resolucionPdf='Pendiente'
+                    resolucionPdf='Pendiente',
+                    dictamenPdf='Pendiente'
                 )
 
                 for estudiante_id in selected_ids:
                     estudiante = Alumno.objects.get(id=estudiante_id)
-                    Proyecto_Alumno.objects.create(alumno=estudiante, proyecto=proyecto, semestre=semestre, resolucionPdf='Pendiente')
+                    Proyecto_Alumno.objects.create(alumno=estudiante, proyecto=proyecto, semestre=semestre, resolucionPdf='Pendiente', dictamenPdf='Pendiente')
 
                 for _ in range(3):
                     Asignacion.objects.create(
@@ -413,11 +415,14 @@ def evaluacion_alumno(request):
     alumno_id = request.session['alumno_id']
     try:
         alumno = Alumno.objects.get(id=alumno_id)
+
+        semestres = Semestre.objects.all()
         
         proyectos_alumno = Proyecto_Alumno.objects.filter(alumno=alumno)
         if not proyectos_alumno.exists():
             return render(request, 'evaluacion_alumno.html', {
                 'alumno': alumno,
+                'semestres': semestres,
                 'mensaje': 'No hay proyectos registrados.'
             })
 
@@ -442,16 +447,63 @@ def evaluacion_alumno(request):
                 'asignaciones': asignaciones,
                 'semestre': proyecto_alumno.semestre,
                 'nota_promocional': nota_promocional,
-                'resolucionPdf': proyecto_alumno.resolucionPdf
+                'resolucionPdf': proyecto_alumno.resolucionPdf,
+                'dictamenPdf': proyecto_alumno.dictamenPdf,
+                
             })
         
         return render(request, 'evaluacion_alumno.html', {
             'alumno': alumno,
+            'semestres': semestres,
             'proyectos_data': proyectos_data,
         })
     except Alumno.DoesNotExist:
         del request.session['alumno_id']
         return redirect('alumno_login')
+
+def actualizar_dictamen(request):
+    if request.method == 'POST':
+        dictamen_pdf = request.FILES.get('dictamenPdf')
+        alumno_id = request.POST.get('alumnoId')
+        semestre_academico = request.POST.get('semestreAcademico')
+
+        if not dictamen_pdf:
+            return JsonResponse({'success': False, 'error': 'No se subió ningún archivo.'})
+
+        try:
+            alumno = Alumno.objects.get(id=alumno_id)
+
+            proyectos_alumno = Proyecto_Alumno.objects.filter(
+                alumno=alumno, 
+                semestre__semestreAcademico=semestre_academico
+            )
+
+            if not proyectos_alumno.exists():
+                return JsonResponse({'success': False, 'error': 'No hay proyectos asociados al alumno para el semestre especificado.'})
+
+            proyecto_id = proyectos_alumno.first().proyecto_id
+
+            registros_a_actualizar = Proyecto_Alumno.objects.filter(proyecto_id=proyecto_id)
+
+            for registro in registros_a_actualizar:
+                if registro.dictamenPdf and registro.dictamenPdf != 'Pendiente':
+                    archivo_anterior = registro.dictamenPdf.path
+                    if default_storage.exists(archivo_anterior):
+                        default_storage.delete(archivo_anterior)
+
+            archivo_path = default_storage.save(f'pdfDictamen/{dictamen_pdf.name}', dictamen_pdf)
+
+            for registro in registros_a_actualizar:
+                registro.dictamenPdf = archivo_path
+                registro.save()
+
+            return JsonResponse({'success': True, 'archivoGuardado': archivo_path})
+        except Alumno.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Alumno no encontrado.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido.'})
 
 def actualizar_asignacion(request):
     if request.method == 'POST':

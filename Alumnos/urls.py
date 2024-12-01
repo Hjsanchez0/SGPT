@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import alumno_login, dashboard_alumno,datosPersonales_alumno, actualizarDatos_alumno, changePassword_alumno, datosInvestigacion_alumno, buscar_estudiante, guardarInvestigacion, tramites_alumno, generar_pdf, registrar_carta_acceso, evaluacion_alumno, actualizar_asignacion, logout_view, reestablecerPassword_alumno, resetear_contrasena
+from .views import alumno_login, dashboard_alumno,datosPersonales_alumno, actualizarDatos_alumno, changePassword_alumno, datosInvestigacion_alumno, buscar_estudiante, guardarInvestigacion, tramites_alumno, generar_pdf, registrar_carta_acceso, evaluacion_alumno, actualizar_dictamen, actualizar_asignacion, logout_view, reestablecerPassword_alumno, resetear_contrasena
 
 #Create your urls here.
 urlpatterns = [
@@ -16,6 +16,7 @@ urlpatterns = [
     path('tramites/<int:proyecto_id>/<int:semestre_id>/pdf/', generar_pdf, name='generar_pdf'),
     path('tramites/registrar-carta/', registrar_carta_acceso, name='registrar_carta_acceso'),
     path('evaluacion/', evaluacion_alumno, name='evaluacion_alumno'),
+    path('evaluacion/actualizar-dictamen', actualizar_dictamen, name='actualizar_dictamen'),
     path('evaluacion/sendlink', actualizar_asignacion, name='actualizar_asignacion'),
     path('reestablecer-password/', reestablecerPassword_alumno, name='reestablecerPassword_alumno'),
     path('resetear-password/', resetear_contrasena, name='resetear_contrasena')

@@ -141,7 +141,7 @@
     float: right;
 }
 
-.ver-pdfResolucion{
+.ver-pdfResolucion, .ver-pdfDictamen{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -150,7 +150,7 @@
     font-weight: bold;
 }
 
-.ver-pdfResolucion{
+.ver-pdfResolucion, .ver-pdfDictamen{
     background-color: transparent;
 }
 
