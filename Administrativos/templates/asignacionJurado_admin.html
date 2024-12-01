@@ -48,6 +48,7 @@
                                 <th>Presidente</th>
                                 <th>Vocal</th>
                                 <th>Secretario</th>
+                                <th>Dictamen</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -69,6 +70,13 @@
                                         <td>{{ proyecto.jurados.presidente.nombre_completo }}</td>
                                         <td>{{ proyecto.jurados.vocal.nombre_completo }}</td>
                                         <td>{{ proyecto.jurados.secretario.nombre_completo }}</td>
+                                        <td>{% if proyecto.dictamen_pdf and proyecto.dictamen_pdf != 'Pendiente' %}
+                                            <button class="ver-pdfDictamen" type="button" data-url="/media/{{ proyecto.dictamen_pdf }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        {% else %}
+                                            {{ proyecto.dictamen_pdf }}
+                                        {% endif %}</td>
                                         <td>
                                             <div class="flex-item" style="justify-content: center;">
                                                 <button class="agregar-jurado" data-proyecto-id="{{ proyecto.id }}" style="margin-right: 10px;">
@@ -83,7 +91,7 @@
                                 {% endfor %}
                             {% else %}
                                 <tr>
-                                    <td colspan="9" class="no-resultados">No tiene proyectos registrados.</td>
+                                    <td colspan="10" class="no-resultados">No tiene proyectos registrados.</td>
                                 </tr>
                             {% endif %}
                         </tbody>

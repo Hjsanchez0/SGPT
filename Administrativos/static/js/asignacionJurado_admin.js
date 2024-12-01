@@ -15,6 +15,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmEliminarJurado = document.getElementById('confirm-eliminar-jurado');
     const cancelEliminarJurado = document.getElementById('cancel-eliminar-jurado');
     const verResolucion = document.querySelectorAll('.ver-pdfResolucion');
+    const verDictamen = document.querySelectorAll('.ver-pdfDictamen');
+
+    verDictamen.forEach(function(verDictamen){
+        verDictamen.addEventListener('click', function(){
+            const urlDrive = this.getAttribute('data-url');
+            window.open(urlDrive, '_blank');
+        })
+    })
 
     verResolucion.forEach(function(verResolucion){
         verResolucion.addEventListener('click', function(){

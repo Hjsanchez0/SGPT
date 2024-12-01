@@ -256,7 +256,8 @@ def asignacionJurado_admin(request):
                         'vocal': {'id': None, 'nombre_completo': None},
                         'secretario': {'id': None, 'nombre_completo': None}
                     },
-                    'resolucion_pdf': proyecto_alumno.resolucionPdf
+                    'resolucion_pdf': proyecto_alumno.resolucionPdf,
+                    'dictamen_pdf': proyecto_alumno.dictamenPdf
                     
                 }
 

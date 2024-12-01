@@ -5,9 +5,10 @@
 <link rel="stylesheet" href="{% static 'css/evaluacion_alumno.css' %}">
 <script src="{% static 'js/evaluacion_alumno.js' %}" defer></script>
 <script>
-    const csrfToken = "{{ csrf_token }}"; 
+    const csrfToken = "{{ csrf_token }}";
     const alumnoId = "{{ alumno.id }}";
     const actualizarAsignacion = "{% url 'actualizar_asignacion' %}";
+    const actualizarDictamen = "{% url 'actualizar_dictamen' %}";
 </script>
 {% endblock %}
 
@@ -39,33 +40,61 @@
                                 <th>Resolucion</th>
                                 <th>Unidad</th>
                                 <th>Promedio</th>
+                                <th>Dictamen</th>
                             </tr>
                         </thead>
-                            <tbody id="resultados-busqueda">
-                                {% if proyectos_data %}
-                                    {% for proyecto_data in proyectos_data %}
-                                    <tr>
-                                        <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
-                                        <td>{% if proyecto_data.resolucionPdf and proyecto_data.resolucionPdf != 'Pendiente' %}
-                                            <button class="ver-pdfResolucion" type="button" data-url="/media/{{ proyecto_data.resolucionPdf }}">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        {% else %}
-                                            {{ proyecto_data.resolucionPdf }}
-                                        {% endif %}</td>
-                                        <td>III</td>
-                                        <td class="{% if proyecto_data.nota_promocional is not None %}{% if proyecto_data.nota_promocional < 13.5 %} fondo-rojo {% else %} fondo-azul {% endif %}{% endif %}">
-                                            {{ proyecto_data.nota_promocional }}
-                                        </td>                                
-                                    </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr>
-                                        <td colspan="4" class="no-resultados">No hay datos de promedio promocional.</td>
-                                    </tr>
-                                {% endif %}
-                            </tbody>
+                        <tbody id="resultados-busqueda">
+                            {% if proyectos_data %}
+                            {% for proyecto_data in proyectos_data %}
+                            <tr>
+                                <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
+                                <td>{% if proyecto_data.resolucionPdf and proyecto_data.resolucionPdf != 'Pendiente' %}
+                                    <button class="ver-pdfResolucion" type="button"
+                                        data-url="/media/{{ proyecto_data.resolucionPdf }}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    {% else %}
+                                    {{ proyecto_data.resolucionPdf }}
+                                    {% endif %}
+                                </td>
+                                <td>III</td>
+                                <td
+                                    class="{% if proyecto_data.nota_promocional is not None %}{% if proyecto_data.nota_promocional < 13.5 %} fondo-rojo {% else %} fondo-azul {% endif %}{% endif %}">
+                                    {{ proyecto_data.nota_promocional }}
+                                </td>
+                                <td>{% if proyecto_data.dictamenPdf and proyecto_data.dictamenPdf != 'Pendiente' %}
+                                    <button class="ver-pdfResolucion" type="button"
+                                        data-url="/media/{{ proyecto_data.dictamenPdf }}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    {% else %}
+                                    {{ proyecto_data.dictamenPdf }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="no-resultados">No hay datos de promedio promocional.</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
                     </table>
+                </div>
+            </div>
+            <div class="info-item flex-container" style="margin-top: 30px;">
+                <div class="flex-item">
+                    <label for="semestre-academico" style="margin-right: 10px;">Semestre Académico:</label>
+                    <select id="semestre-academico" name="semestreAcademico" style="margin-right: 10px;" required>
+                        <option value="" disabled selected>Seleccione un semestre</option>
+                        {% for semestre in semestres %}
+                        <option value="{{ semestre.semestreAcademico }}">{{ semestre.semestreAcademico }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="dictamen-pdf" style="margin-right: 10px;">Subir Dictamen (PDF):</label>
+                    <input type="file" id="dictamen-pdf" name="dictamenPdf" accept="application/pdf" required
+                        style="margin-right: 10px;">
+                    <button type="submit" class="save-btn"><i class="fas fa-upload"></i> Enviar</button>
                 </div>
             </div>
             <div class="info-item flex-container" style="margin-top: 30px;">
@@ -85,29 +114,30 @@
                     </thead>
                     <tbody id="resultados-busqueda">
                         {% if proyectos_data %}
-                            {% for proyecto_data in proyectos_data %}
-                                {% if proyecto_data.asignaciones and proyecto_data.asignaciones|length > 0 %}
-                                    {% with jurados_asignados=False %}
-                                        {% for asignacion in proyecto_data.asignaciones %}
-                                            {% if asignacion.jurado %}
-                                                {% with jurados_asignados=True %}
-                                                    <tr>
-                                                        <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
-                                                        <td>{{ asignacion.jurado.nombres }} {{ asignacion.jurado.apellidoPat }} {{ asignacion.jurado.apellidoMat }}</td>
-                                                        <td>{{ asignacion.jurado.rol.ocupacion }}</td>
-                                                        <td class="{% if asignacion.notaFinal is not None %}{% if asignacion.notaFinal < 13.5 %} fondo-rojo {% else %} fondo-azul {% endif %}{% endif %}">
-                                                            {{ asignacion.notaFinal }}
-                                                        </td>   
-                                                    </tr>
-                                                {% endwith %}
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if not jurados_asignados %}
-                                            
-                                        {% endif %}
-                                    {% endwith %}
-                                {% endif %}
-                            {% endfor %}
+                        {% for proyecto_data in proyectos_data %}
+                        {% if proyecto_data.asignaciones and proyecto_data.asignaciones|length > 0 %}
+                        {% with jurados_asignados=False %}
+                        {% for asignacion in proyecto_data.asignaciones %}
+                        {% if asignacion.jurado %}
+                        {% with jurados_asignados=True %}
+                        <tr>
+                            <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
+                            <td>{{ asignacion.jurado.nombres }} {{ asignacion.jurado.apellidoPat }} {{asignacion.jurado.apellidoMat }}</td>
+                            <td>{{ asignacion.jurado.rol.ocupacion }}</td>
+                            <td
+                                class="{% if asignacion.notaFinal is not None %}{% if asignacion.notaFinal < 13.5 %} fondo-rojo {% else %} fondo-azul {% endif %}{% endif %}">
+                                {{ asignacion.notaFinal }}
+                            </td>
+                        </tr>
+                        {% endwith %}
+                        {% endif %}
+                        {% endfor %}
+                        {% if not jurados_asignados %}
+
+                        {% endif %}
+                        {% endwith %}
+                        {% endif %}
+                        {% endfor %}
                         {% endif %}
                     </tbody>
                 </table>
@@ -137,48 +167,51 @@
                         </thead>
                         <tbody id="resultados-busqueda">
                             {% with asignaciones_existen=False %}
-                                {% for proyecto_data in proyectos_data %}
-                                    {% if proyecto_data.asignaciones %}
-                                        {% for asignacion in proyecto_data.asignaciones %}
-                                            {% if asignacion.jurado %}
-                                                {% with asignaciones_existen=True %}
-                                                    <tr>
-                                                        <td>{{ forloop.counter }}</td>
-                                                        <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
-                                                        <td>{{ asignacion.jurado.nombres }} {{ asignacion.jurado.apellidoPat }} {{ asignacion.jurado.apellidoMat }}</td>
-                                                        <td>{{ asignacion.fechaEnvio }}</td>
-                                                        <td>{{ asignacion.estadoEnvio }}</td>
-                                                        <td>
-                                                            {% if asignacion.drivePdf and asignacion.drivePdf != "Pendiente" %}
-                                                                <button class="ver-drive" type="button" data-url="{{ asignacion.drivePdf }}">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </button>
-                                                            {% else %}
-                                                                {{ asignacion.drivePdf }}
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>{{ asignacion.fechaRevision }}</td>
-                                                        <td>{{ asignacion.estadoRevision }}</td>
-                                                        <td>
-                                                            {% if asignacion.observacionPdf and asignacion.observacionPdf != "Pendiente" %}
-                                                                <button class="ver-observacion" type="button" data-url-obs="/media/{{ asignacion.observacionPdf }}">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </button>
-                                                            {% else %}
-                                                                {{ asignacion.observacionPdf }}
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            <button class="register-btn" data-asignacion-id="{{ asignacion.id }}"><i class="fas fa-paper-plane"></i> Enviar</button>
-                                                        </td>
-                                                    </tr>
-                                                {% endwith %}
-                                            {% endif %}
-                                        {% endfor %}
+                            {% for proyecto_data in proyectos_data %}
+                            {% if proyecto_data.asignaciones %}
+                            {% for asignacion in proyecto_data.asignaciones %}
+                            {% if asignacion.jurado %}
+                            {% with asignaciones_existen=True %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ proyecto_data.semestre.semestreAcademico }}</td>
+                                <td>{{ asignacion.jurado.nombres }} {{ asignacion.jurado.apellidoPat }} {{
+                                    asignacion.jurado.apellidoMat }}</td>
+                                <td>{{ asignacion.fechaEnvio }}</td>
+                                <td>{{ asignacion.estadoEnvio }}</td>
+                                <td>
+                                    {% if asignacion.drivePdf and asignacion.drivePdf != "Pendiente" %}
+                                    <button class="ver-drive" type="button" data-url="{{ asignacion.drivePdf }}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    {% else %}
+                                    {{ asignacion.drivePdf }}
                                     {% endif %}
-                                {% endfor %}
+                                </td>
+                                <td>{{ asignacion.fechaRevision }}</td>
+                                <td>{{ asignacion.estadoRevision }}</td>
+                                <td>
+                                    {% if asignacion.observacionPdf and asignacion.observacionPdf != "Pendiente" %}
+                                    <button class="ver-observacion" type="button"
+                                        data-url-obs="/media/{{ asignacion.observacionPdf }}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    {% else %}
+                                    {{ asignacion.observacionPdf }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="register-btn" data-asignacion-id="{{ asignacion.id }}"><i
+                                            class="fas fa-paper-plane"></i> Enviar</button>
+                                </td>
+                            </tr>
                             {% endwith %}
-                        </tbody>                        
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% endfor %}
+                            {% endwith %}
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -191,7 +224,8 @@
                 <hr class="separator">
                 <div class="info-item flex-container">
                     <div class="flex-item">
-                        <label >Enlace Drive(.pdf) (Asegurese que darle permiso para todos al enlace antes de enviar): </label>
+                        <label>Enlace Drive(.pdf) (Asegurese que darle permiso para todos al enlace antes de enviar):
+                        </label>
                     </div>
                 </div>
                 <div class="info-item flex-container">
